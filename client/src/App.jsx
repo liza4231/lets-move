@@ -10,6 +10,7 @@ import {
 
 import Exercises from "./Exercises.jsx";
 import Routines from "./Routines.jsx";
+import LogExercise from "./LogExercise.jsx";
 import "./App.css";
 
 
@@ -266,6 +267,22 @@ function AppRoutes() {
               onLogout={() => setUser(null)}
             >
               <Exercises />
+            </Dashboard>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      
+      <Route
+        path="/log-exercise/:exerciseId"
+        element={
+          user ? (
+            <Dashboard
+              user={user}
+              onLogout={() => setUser(null)}
+            >
+              <LogExercise />
             </Dashboard>
           ) : (
             <Navigate to="/login" replace />

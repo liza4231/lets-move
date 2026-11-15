@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const measurementFields = [
   { key: "sets", label: "Sets", step: "1", min: "1" },
@@ -376,6 +377,8 @@ function MeasurementSummary({ exercise }) {
 }
 
 export default function Exercises() {
+  const navigate = useNavigate();
+
   const [exercises, setExercises] = useState([]);
   const [form, setForm] = useState({ ...emptyForm });
   const [editForm, setEditForm] = useState({ ...emptyForm });
@@ -634,24 +637,33 @@ export default function Exercises() {
                       <MeasurementSummary exercise={exercise} />
 
                       <div className="exercise-actions">
-                      <button
-                        type="button"
-                        className="secondary-button"
-                        onClick={() => handleEdit(exercise)}
-                        disabled={saving}
-                      >
-                        Edit
-                      </button>
+                        <button
+                          type="button"
+                          className="secondary-button"
+                          onClick={() => navigate(`/log-exercise/${exercise.id}`)}
+                          disabled={saving}
+                        >
+                          Log Exercise
+                        </button>
 
-                      <button
-                        type="button"
-                        className="delete-button"
-                        onClick={() => handleDelete(exercise)}
-                        disabled={saving}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                        <button
+                          type="button"
+                          className="secondary-button"
+                          onClick={() => handleEdit(exercise)}
+                          disabled={saving}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          className="delete-button"
+                          onClick={() => handleDelete(exercise)}
+                          disabled={saving}
+                        >
+                          Delete
+                        </button>
+                      </div>
                   </>
                 )}
               </div>
