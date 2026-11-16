@@ -558,3 +558,38 @@ button:disabled {
   margin-bottom: 6px;
   font-weight: 600;
 }
+
+/* Workout history */
+.history-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.history-filter label {
+  font-weight: 600;
+}
+
+.history-filter input {
+  padding: 10px;
+  border: 1px solid #cbd2d8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.history-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.history-details .routine-selected-item {
+  background: white;
+}
+
+.dashboard-nav {
+  flex-wrap: wrap;
+}

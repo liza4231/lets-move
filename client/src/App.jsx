@@ -13,6 +13,7 @@ import Exercises from "./Exercises.jsx";
 import Routines from "./Routines.jsx";
 import LogExercise from "./LogExercise.jsx";
 import LogRoutine from "./LogRoutine.jsx";
+import History from "./History.jsx";
 import "./App.css";
 
 async function apiRequest(path, options = {}) {
@@ -180,6 +181,7 @@ function Dashboard({ user, onLogout, children }) {
         <nav className="dashboard-nav" aria-label="Let's Move sections">
           <NavLink to="/exercises" className={({ isActive }) => isActive ? "active" : ""}>Exercises</NavLink>
           <NavLink to="/routines" className={({ isActive }) => isActive ? "active" : ""}>Routines</NavLink>
+          <NavLink to="/history" className={({ isActive }) => isActive ? "active" : ""}>History</NavLink>
         </nav>
         {children}
       </main>
@@ -214,6 +216,7 @@ function AppRoutes() {
       <Route path="/login" element={user ? <Navigate to="/exercises" replace /> : <AuthPage onLogin={setUser} />} />
       <Route path="/exercises" element={protectedPage(<Exercises />)} />
       <Route path="/routines" element={protectedPage(<Routines />)} />
+      <Route path="/history" element={protectedPage(<History />)} />
       <Route path="/log-exercise/:exerciseId" element={protectedPage(<LogExercise />)} />
       <Route path="/log-routine/:routineId" element={protectedPage(<LogRoutine />)} />
       <Route path="/" element={<Navigate to="/exercises" replace />} />
