@@ -200,3 +200,15 @@ class WorkoutLog(db.Model):
             )
         ),
     )
+
+class PlannedWorkout(db.Model):
+    __tablename__ = "planned_workouts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    routine_id = db.Column(db.Integer, db.ForeignKey("routines.id", ondelete="CASCADE"), nullable=True)
+    exercise_id = db.Column(db.Integer, db.ForeignKey("exercises.id", ondelete="CASCADE"), nullable=True)
+    scheduled_on = db.Column(db.Date, nullable=False, index=True)
+
+    routine = db.relationship("Routine")
+    exercise = db.relationship("Exercise")

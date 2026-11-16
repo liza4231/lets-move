@@ -43,14 +43,14 @@ function emptyExerciseValues(exercises) {
     return values;
   });
 }
-export default function LogRoutine({ embeddedRoutineId, onClose, onSaved }) {
+export default function LogRoutine({ embeddedRoutineId, onClose, onSaved, initialDate }) {
   const { routineId: routeRoutineId } = useParams();
   const routineId = embeddedRoutineId ?? routeRoutineId;
   const navigate = useNavigate();
   const [routine, setRoutine] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [logId, setLogId] = useState(null);
-  const [performedOn, setPerformedOn] = useState(todayLocal());
+  const [performedOn, setPerformedOn] = useState(initialDate || todayLocal());
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
