@@ -50,7 +50,34 @@ export default function Planner() {
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
   }
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      api("/planned-workouts"),
+      api("/workout-logs"),
+      api("/routines"),
+      api("/exercises"),
+    ])
+      .then(([planned, history, routineList, exerciseList]) => {
+        if (cancelled) return;
+        setPlans(planned);
+        setLogs(history);
+        setRoutines(routineList);
+        setExercises(exerciseList);
+        setError("");
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const today = dateKey(new Date());
   const weekStart = startOfWeek(parseDate(selected));

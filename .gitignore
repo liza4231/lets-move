@@ -1,13 +1,23 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
 # Python
 venv/
 .venv/
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+.pytest_cache/
 
-# React / Node
+# Node / Vite
 node_modules/
 dist/
 
-# System files
+# Local source and backup archives
+*.zip
+
+# Editor and OS files
+.vscode/
 .DS_Store
+Thumbs.db

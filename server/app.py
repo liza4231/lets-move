@@ -1134,7 +1134,7 @@ def workout_logs():
 
 @app.route(
     "/workout-logs/<int:log_id>",
-    methods=["GET", "PATCH"]
+    methods=["GET", "PATCH", "DELETE"]
 )
 def workout_log_detail(log_id):
     user_id = current_user_id()
@@ -1163,6 +1163,13 @@ def workout_log_detail(log_id):
         return jsonify(
             workout_log_to_dict(log)
         ), 200
+
+    if request.method == "DELETE":
+        if log.status != "in_progress":
+            return jsonify({"error": "Only in-progress workouts can be deleted"}), 409
+        db.session.delete(log)
+        db.session.commit()
+        return jsonify({"message": "Unfinished workout deleted"}), 200
 
     if log.status == "completed":
         return jsonify({

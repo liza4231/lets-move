@@ -76,7 +76,7 @@ function AuthPage({ onLogin }) {
     <main className="auth-page">
       <div className="auth-card">
         <h1>Let's Move</h1>
-        <p>Your workout and movement journal.</p>
+        <p>Plan your activities and log your workouts.</p>
         <h2>{isRegistering ? "Create an account" : "Log in"}</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">Username</label>
@@ -126,6 +126,18 @@ function Dashboard({ user, onLogout, children }) {
     return () => { cancelled = true; };
   }, [location.pathname, refreshKey]);
 
+  async function deleteUnfinished(workout) {
+    if (!window.confirm(`Delete this unfinished workout? This cannot be undone. The original routine will remain.`)) return;
+    setError("");
+    try {
+      await apiRequest(`/workout-logs/${workout.id}`, { method: "DELETE" });
+      if (expandedId === workout.id) setExpandedId(null);
+      setRefreshKey((current) => current + 1);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   async function handleLogout() {
     setError("");
     try {
@@ -139,12 +151,12 @@ function Dashboard({ user, onLogout, children }) {
   return (
     <div className="dashboard">
       <header className="app-header">
-        <h1>Let's Move</h1>
+        <h1><NavLink to="/" className="home-link">Let's Move</NavLink></h1>
         <button onClick={handleLogout}>Log out</button>
       </header>
       <main className="dashboard-content">
         <h2>Welcome, {user.username}!</h2>
-        <p>Your movement journal is ready.</p>
+        <p>Plan your activities and log your workouts.</p>
         {error && <p className="error">{error}</p>}
 
         {unfinished.length > 0 && (
@@ -163,6 +175,13 @@ function Dashboard({ user, onLogout, children }) {
                       onClick={() => setExpandedId(isExpanded ? null : workout.id)}
                     >
                       {isExpanded ? "Collapse Workout" : "Continue Workout"}
+                    </button>
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() => deleteUnfinished(workout)}
+                    >
+                      Delete Workout
                     </button>
                     {isExpanded && (
                       <LogRoutine

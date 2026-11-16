@@ -240,7 +240,7 @@ export default function LogRoutine({ embeddedRoutineId, onClose, onSaved, initia
       <section className={onClose ? "embedded-log-form" : "dashboard-card log-exercise-card"}>
         <h3>
           {finished
-            ? "Routine Finished"
+            ? "Routine Completed"
             : "Routine Saved — Unfinished"}
         </h3>
         <h4>{routine.name}</h4>
@@ -506,7 +506,7 @@ export default function LogRoutine({ embeddedRoutineId, onClose, onSaved, initia
             onClick={() => handleAction("finish")}
             disabled={saving}
           >
-            Finish
+            Mark Complete
           </button>
         </div>
       )}

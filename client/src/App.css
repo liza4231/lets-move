@@ -632,3 +632,7 @@ button:disabled {
 .planner-form-fields { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-top: 14px; }
 .planner-day.selected { background: #e0efe6; border-color: #537d70; }
 @media (max-width: 550px) { .planner-header { align-items: flex-start; flex-direction: column; } .planner-header .planner-controls { align-self: flex-end; } }
+
+/* Keep the home title looking like a heading while making it clickable. */
+.app-header .home-link { color: inherit; text-decoration: none; }
+.app-header .home-link:hover, .app-header .home-link:focus-visible { text-decoration: underline; }
