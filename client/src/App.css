@@ -593,3 +593,42 @@ button:disabled {
 .dashboard-nav {
   flex-wrap: wrap;
 }
+
+
+/* Weekly planner */
+.planner-controls, .planner-actions, .planner-schedule {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.planner-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 18px 0 24px; }
+.planner-day { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; padding: 12px 4px; border: 1px solid #cbd2d8; border-radius: 8px; background: white; color: #25332c; cursor: pointer; }
+.planner-day.past { background: #eef0f1; }
+.planner-day.today { background: #eaf3ee; }
+.planner-day.selected { outline: 2px solid #537d70; outline-offset: -2px; }
+.planner-dot { color: #537d70; }
+.planner-schedule select { min-width: 160px; padding: 10px; border: 1px solid #cbd2d8; border-radius: 6px; }
+@media (max-width: 550px) {
+  .planner-week { gap: 3px; }
+  .planner-day { padding: 10px 2px; font-size: 12px; }
+}
+
+/* Planner layout */
+.planner-header, .planner-activity-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.planner-header { margin: 14px 0; }
+.planner-header .planner-controls { margin: 0; gap: 6px; }
+.planner-icon { min-width: 38px; min-height: 38px; padding: 6px 10px; font-size: 21px; line-height: 1; }
+.planner-date-jump { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+.planner-date-jump input, .planner-form-fields input, .planner-form-fields select { padding: 10px; border: 1px solid #cbd2d8; border-radius: 6px; font: inherit; max-width: 100%; }
+.planner-activity-heading h4 { margin: 0 0 6px; }
+.planner-actions { margin: 12px 0; }
+.planner-expanded { border-top: 1px solid #d8e2dc; margin-top: 12px; padding-top: 14px; }
+.planner-detail-row { display: flex; flex-direction: column; gap: 4px; margin: 10px 0; }
+.planner-detail-row span { color: #53635b; font-size: 14px; }
+.planner-add { margin-top: 18px; width: 100%; }
+.planner-add-form { margin-top: 18px; border: 1px solid #d6e1db; border-radius: 8px; padding: 18px; background: #f7faf8; }
+.planner-form-fields { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-top: 14px; }
+.planner-day.selected { background: #e0efe6; border-color: #537d70; }
+@media (max-width: 550px) { .planner-header { align-items: flex-start; flex-direction: column; } .planner-header .planner-controls { align-self: flex-end; } }

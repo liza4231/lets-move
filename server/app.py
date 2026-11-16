@@ -28,7 +28,7 @@ CORS(
     supports_credentials=True
 )
 
-from models import User, Exercise, Routine, RoutineExercise, WorkoutLog
+from models import User, Exercise, Routine, RoutineExercise, WorkoutLog, PlannedWorkout
 
 
 # General helpers
@@ -1189,3 +1189,64 @@ def workout_log_detail(log_id):
     return jsonify(
         workout_log_to_dict(log)
     ), 200
+
+# One-time routine or exercise scheduling
+@app.route("/planned-workouts", methods=["GET", "POST"])
+def planned_workouts():
+    user_id = current_user_id()
+    if user_id is None:
+        return jsonify({"error": "Not authorized"}), 401
+
+    if request.method == "GET":
+        plans = PlannedWorkout.query.filter_by(user_id=user_id).order_by(
+            PlannedWorkout.scheduled_on, PlannedWorkout.id
+        ).all()
+        return jsonify([{
+            "id": plan.id,
+            "kind": "routine" if plan.routine_id else "exercise",
+            "routine_id": plan.routine_id,
+            "exercise_id": plan.exercise_id,
+            "name": plan.routine.name if plan.routine_id else plan.exercise.name,
+            "scheduled_on": plan.scheduled_on.isoformat(),
+        } for plan in plans]), 200
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid JSON body"}), 400
+    kind = data.get("kind")
+    source_id = data.get("routine_id") if kind == "routine" else data.get("exercise_id")
+    if kind not in ("routine", "exercise") or type(source_id) is not int:
+        return jsonify({"error": "Select a routine or exercise"}), 400
+    model = Routine if kind == "routine" else Exercise
+    source = model.query.filter_by(id=source_id, user_id=user_id).first()
+    if source is None:
+        return jsonify({"error": "Activity not found"}), 404
+    try:
+        scheduled_on = date.fromisoformat(data.get("scheduled_on", ""))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Enter a valid date"}), 400
+    plan = PlannedWorkout(
+        user_id=user_id, scheduled_on=scheduled_on,
+        routine_id=source.id if kind == "routine" else None,
+        exercise_id=source.id if kind == "exercise" else None,
+    )
+    db.session.add(plan)
+    db.session.commit()
+    return jsonify({
+        "id": plan.id, "kind": kind, "name": source.name,
+        "routine_id": plan.routine_id, "exercise_id": plan.exercise_id,
+        "scheduled_on": scheduled_on.isoformat(),
+    }), 201
+
+
+@app.route("/planned-workouts/<int:plan_id>", methods=["DELETE"])
+def delete_planned_workout(plan_id):
+    user_id = current_user_id()
+    if user_id is None:
+        return jsonify({"error": "Not authorized"}), 401
+    plan = PlannedWorkout.query.filter_by(id=plan_id, user_id=user_id).first()
+    if plan is None:
+        return jsonify({"error": "Scheduled activity not found"}), 404
+    db.session.delete(plan)
+    db.session.commit()
+    return jsonify({"message": "Scheduled activity removed"}), 200

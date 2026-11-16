@@ -38,13 +38,14 @@ async function workoutRequest(path, options = {}) {
   return data;
 }
 
-export default function LogExercise() {
-  const { exerciseId } = useParams();
+export default function LogExercise({ embeddedExerciseId, onClose, onSaved, initialDate }) {
+  const { exerciseId: routeExerciseId } = useParams();
+  const exerciseId = embeddedExerciseId ?? routeExerciseId;
   const navigate = useNavigate();
 
   const [exercise, setExercise] = useState(null);
   const [values, setValues] = useState({});
-  const [performedOn, setPerformedOn] = useState(todayLocal());
+  const [performedOn, setPerformedOn] = useState(initialDate || todayLocal());
   const [notes, setNotes] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -181,6 +182,7 @@ export default function LogExercise() {
       });
 
       setSaved(true);
+      onSaved?.();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -206,7 +208,7 @@ export default function LogExercise() {
         <button
         type="button"
         className="secondary-button"
-        onClick={() => navigate("/exercises")}
+        onClick={() => onClose ? onClose() : navigate("/exercises")}
         >
         Back to Exercises
         </button>
@@ -226,7 +228,7 @@ export default function LogExercise() {
         <button
         type="button"
         className="secondary-button"
-        onClick={() => navigate("/exercises")}
+        onClick={() => onClose ? onClose() : navigate("/exercises")}
         >
         Back to Exercises
         </button>
@@ -237,7 +239,7 @@ export default function LogExercise() {
   const selected = exercise.exercises[0];
 
   return (
-    <section className="dashboard-card log-exercise-card">
+    <section className={onClose ? "embedded-log-form" : "dashboard-card log-exercise-card"}>
       <div className="log-exercise-header">
         <div>
           <h3>Log Exercise</h3>
@@ -247,7 +249,7 @@ export default function LogExercise() {
         <button
         type="button"
         className="secondary-button"
-        onClick={() => navigate("/exercises")}
+        onClick={() => onClose ? onClose() : navigate("/exercises")}
         >
         Cancel
         </button>
@@ -393,7 +395,7 @@ export default function LogExercise() {
               <button
                 type="button"
                 className="secondary-button"
-                onClick={() => navigate("/exercises")}
+                onClick={() => onClose ? onClose() : navigate("/exercises")}
               >
                 Discard
               </button>
